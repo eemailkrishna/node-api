@@ -14,8 +14,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use('/auth', require('./routes/auth'));
-app.use('/users', require('./routes/user'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/user'));
 
 
 app.post('/login11', async (req, res) => {
