@@ -10,3 +10,4 @@ exports.authenticate = (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+
