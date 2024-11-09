@@ -38,6 +38,7 @@ exports.login = async (req, res, next) => {
 exports.register = async (req, res, next) => {
 
     try {
+      return req.body
       const { name ,email, password } = req.body; 
       const user = await User.create(name,email,password);    
       if(user==0){
