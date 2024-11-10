@@ -25,13 +25,13 @@ const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 return rows[0];
 };
 
-const create = async (name , email,password) =>{
+const create = async (name , email,password,phone ,address ,user_type,) =>{
     const [rows1]= await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if(rows1.length > 0){
        return '0';
     }
     else{
-        const [rows] = await db.query('INSERT INTO users (name, email, password,phone ,address ,user_type) VALUES (?, ?, ? ,? ,?,?)', [name, email, password,phone ,address ,user_type]);
+        const [rows] = await db.query('INSERT INTO users (name ,email, password ,phone ,address ,user_type) VALUES (?, ?, ? ,? ,?,?)', [name ,email, password ,phone ,address ,user_type]);
         return { id: rows.insertId, name, email };  
     }
 

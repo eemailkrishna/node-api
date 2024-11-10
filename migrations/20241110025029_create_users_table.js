@@ -10,6 +10,8 @@ exports.up = function(knex) {
       table.string('email').unique().notNullable();
       table.string('phone').unique().notNullable();
       table.string('address').unique().notNullable();
+      table.string('password').unique().notNullable();
+
       table
       .enum('user_type', ['labour', 'transporter'])
       .notNullable();

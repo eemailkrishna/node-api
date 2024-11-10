@@ -4,7 +4,6 @@ const User = require('../models/user');
 const session = require('express-session');
 const express = require('express');
 const app = express();
-
 app.use(session({
   secret: 'my-secret-key',
   resave: false,
@@ -39,7 +38,9 @@ exports.register = async (req, res, next) => {
 
     try {
       const { name ,email, password ,phone ,address ,user_type } = req.body; 
-      const user = await User.create(name,email,password,phone,address ,user_type);    
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await User.create(name ,email, hashedPassword ,phone ,address ,user_type);    
       if(user==0){
         
       res.status(400).json({ 'message':'Email Already Exists','status':400});
