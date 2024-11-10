@@ -31,7 +31,7 @@ const create = async (name , email,password) =>{
        return '0';
     }
     else{
-        const [rows] = await db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password]);
+        const [rows] = await db.query('INSERT INTO users (name, email, password,phone ,address ,user_type) VALUES (?, ?, ? ,? ,?,?)', [name, email, password,phone ,address ,user_type]);
         return { id: rows.insertId, name, email };  
     }
 
