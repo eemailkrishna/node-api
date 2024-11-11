@@ -12,12 +12,7 @@ app.use(session({
 
 
 const findAll = async () => {   
-    const [rows] = await db.query('SELECT * FROM users');
-    
-    // Remove the password field from each user
-    rows.forEach(user => {
-        delete user.password;
-    });
+    const [rows] = await db.query('SELECT * FROM labours');
 
     return rows;
 };
@@ -36,6 +31,13 @@ const create = async (name , email,password,phone ,address ,user_type,) =>{
         const [rows] = await db.query('INSERT INTO users (name ,email, password ,phone ,address ,user_type) VALUES (?, ?, ? ,? ,?,?)', [name ,email, password ,phone ,address ,user_type]);
         return { id: rows.insertId, name, email };  
     }
+
+}
+
+const labour = async (name ,mobile ,address ,type,) =>{
+
+    const [rows] = await db.query('INSERT INTO labours (name  ,mobile ,address ,type) VALUES (? ,? ,?,?)', [name ,mobile ,address ,type]);
+        return { id: rows.insertId, name };  
 
 }
 
@@ -99,4 +101,4 @@ const deleteUser = async (id)=> {
 
   
 
-module.exports = {findAll ,findByEmail,create,deleteUser ,fetchByID ,UpdateByID,InsertAddress}
+module.exports = {labour,findAll ,findByEmail,create,deleteUser ,fetchByID ,UpdateByID,InsertAddress}

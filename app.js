@@ -3,11 +3,20 @@ const { handle } = require('./middleware/error');
 const config = require('./config/config');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const swaggerUi = require('swagger-ui-express');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+const swaggerFilePath = './swagger-output.json';
+if (fs.existsSync(swaggerFilePath)) {
+  const swaggerDocument = require(swaggerFilePath);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} else {
+  console.warn('Warning: swagger-output.json file not found. Generate it by running `node swagger.js`.');
+}
 app.use(session({
   secret: 'your-secret-key',
   resave: false,

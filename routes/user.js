@@ -3,7 +3,11 @@ const users = require('../controllers/user');
 const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
+
 router.get('/', authenticate, [users.getAll]);
+router.post('/', authenticate, [users.addLabour]);
+router.post('/demo', authenticate, [users.addLabour]);
+
 router.get('/:id', authenticate, [users.fetchByID]);
 router.put('/:id', authenticate, [users.UpdateByID]);
 

@@ -14,12 +14,34 @@ app.use(session({
   saveUninitialized: true
 }));
 
+ const addLabour= async (req,res,next)=>{
+  try {
+    const { name  ,mobile ,address ,user_type } = req.body; 
+    const user = await User.labour(name  ,mobile ,address ,user_type);    
+    if(user==0){
+      
+    res.status(400).json({ 'message':'Email Already Exists','status':400});
+    }       
+  
+    if(user){
+    res.status(201).json({ 'message':'Recored created','status':201,data:user});
+    }
+    if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+    const match = await bcrypt.compare(password, user.password);
+   
+    if (!match) return res.status(401).json({ error: 'Invalid email or password' });
+    const token = sign({ id: user.id });
+    res.json({ token });
+  } catch (err) {
+    next(err);
+  }
+ }
  const getAll = async (req, res, next) => {
   const AuthId = session.AuthId;          
   try {
     const users = await User.findAll(AuthId);    
     if(users!=null){
-      res.json(users);
+      res.json({'status':true,'status_code':200,'msg':'Record fetch successfully','data':users});
     }
     else{
   res.send({'Message':'Record not found'});
@@ -132,4 +154,4 @@ app.use(session({
   // };
   
 
-  module.exports = { UpdateByID,getAll ,deleteUser ,fetchByID , InsertAddress}
+  module.exports = { addLabour,UpdateByID,getAll ,deleteUser ,fetchByID , InsertAddress}
