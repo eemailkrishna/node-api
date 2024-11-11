@@ -11,13 +11,15 @@ app.use(session({
 
 
 
-const findAll = async (userid) => {   
-// const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [userid]);
+const findAll = async () => {   
+    const [rows] = await db.query('SELECT * FROM users');
+    
+    // Remove the password field from each user
+    rows.forEach(user => {
+        delete user.password;
+    });
 
-
-const [rows] = await db.query(`SELECT * FROM users JOIN address ON users.id = address.user_id  WHERE users.id =? `,[userid])
-
-return rows;
+    return rows;
 };
 
 const findByEmail = async (email) => {
