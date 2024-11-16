@@ -9,7 +9,6 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-require("./redis");
 
 const swaggerFilePath = './swagger-output.json';
 if (fs.existsSync(swaggerFilePath)) {

@@ -2,7 +2,6 @@
 
 const Customer = require('../../models/customer')
 const {ResponseSchema} = require('./schema');
-const redisClient = require("../../redis");
 let cache = {
     data: null,
     timestamp: null,
@@ -31,16 +30,12 @@ const post = async(req,res,next)=>{
 
 const fetch = async (req, res, next) => {
     try {
-        const cacheKey = `customers:${order}`; // Unique key based on query parameters
-
-        // Check Redis for cached data
-        const cachedData = await redisClient.get(cacheKey);
-        if (cachedData) {
+        if (cache.data) {
             return res.status(200).json({
                 success: true,
                 status: 200,
-                message: "Record fetched successfully (cached)",
-                data: JSON.parse(cachedData),
+                message: "Record fetched successfully",
+                data: cache.data,
             });
         }
         const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
@@ -54,9 +49,7 @@ const fetch = async (req, res, next) => {
         }
 
         const transformedData = data.map(ResponseSchema);
-        await redisClient.set(cacheKey, JSON.stringify(transformedData), {
-            EX: 3600, // Cache expiry in seconds (1 hour)
-        });
+        cache.data = transformedData;
         res.status(200).json({
             success: true,
             status: 200,
