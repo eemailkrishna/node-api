@@ -28,36 +28,41 @@ const post = async(req,res,next)=>{
 }
 
 
-const fetch = async(req,res,next)=>{
-   try {
-    if (cache.data && cache.timestamp) {
-        return res.status(200).json({
+const fetch = async (req, res, next) => {
+    try {
+        if (cache.data) {
+            console.log("Serving from cache");
+            return res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Record fetched successfully",
+                data: cache.data,
+            });
+        }
+        const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+        const data = await Customer.fetch(order);
+        if (!data || data.length === 0) {
+            return res.status(404).json({
+                success: false,
+                status: 404,
+                message: "No records found",
+            });
+        }
+
+        const transformedData = data.map(ResponseSchema);
+        cache.data = transformedData;
+        res.status(200).json({
             success: true,
             status: 200,
             message: "Record fetched successfully",
-            data: cache.data,
+            data: transformedData,
         });
+    } catch (error) {
+        console.error("Error fetching records:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
-      const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
-      const data = await Customer.fetch(order);
-      const transformedData = data.map(ResponseSchema);
-      cache = {
-        data: transformedData,
-        timestamp: new Date(),
-    };
+};
 
-      res.status(200).json(
-         {
-         success: true,
-         status:200,
-         message: "Record fetch successfully",
-         data: transformedData,
-         }
-      )    
-   } catch (error) {
-      console.error(error);
-   }
-}
 
 
 module.exports = {post,fetch}
