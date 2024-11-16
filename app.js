@@ -36,6 +36,11 @@ app.use(session({
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/user'));
+app.use('/api/transport', require('./routes/transport'));
+app.use('/api/payment', require('./routes/payment'));
+app.use('/api/material-purchase', require('./routes/purchase'));
+
+
 
 
 app.post('/login11', async (req, res) => {

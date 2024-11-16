@@ -10,7 +10,7 @@ app.use(session({
   saveUninitialized: true
 }));
 
-exports.login = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByEmail(email);
@@ -18,23 +18,31 @@ exports.login = async (req, res, next) => {
         const token = sign({ id: user.user });
        var AuthId = user.id;        
         session.AuthId = AuthId.toString();
-        const kkk = session.AuthId;     
-        
-    res.json({ 'data':user, token });
+        const kkk = session.AuthId;
     }
     if (!user) return res.status(401).json({ error: 'Invalid email or password' });
     const match = await bcrypt.compare(password, user.password);
-    // return res.send(user.password);
     if (!match) return res.status(401).json({ error: 'Invalid email or password' });
     const token = sign({ id: user.id });
-    res.json({ token });
+    const responseData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+    return res.status(200).json({
+      success: true,
+      status:200,
+      message: "Login successful",
+      data: responseData,
+      token,
+    });
   } catch (err) {
     next(err);
   }
 };
 
 
-exports.register = async (req, res, next) => {
+const register = async (req, res, next) => {
 
     try {
       const { name ,email, password ,phone ,address ,user_type } = req.body; 
@@ -59,3 +67,5 @@ exports.register = async (req, res, next) => {
       next(err);
     }
   };
+
+  module.exports ={login,register}

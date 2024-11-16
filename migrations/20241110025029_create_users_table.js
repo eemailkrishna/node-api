@@ -8,9 +8,9 @@ exports.up = function(knex) {
       table.increments('id').primary();
       table.string('name').notNullable();
       table.string('email').unique().notNullable();
-      table.string('phone').unique().notNullable();
-      table.string('address').unique().notNullable();
-      table.string('password').unique().notNullable();
+      table.string('phone').notNullable();
+      table.string('address').notNullable();
+      table.string('password').notNullable();
 
       table
       .enum('user_type', ['labour', 'transporter'])

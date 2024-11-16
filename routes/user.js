@@ -1,11 +1,14 @@
 const express = require('express');
-const users = require('../controllers/user');
+const users = require('../controllers/users/user');
 const { authenticate } = require('../middleware/auth');
+const validateRequest  = require('../middleware/validateRequest');
+const {RequestSchema} = require('../controllers/users/schema');
+
 
 const router = express.Router();
 
 router.get('/', authenticate, [users.getAll]);
-router.post('/', authenticate, [users.addLabour]);
+router.post('/', authenticate,validateRequest(RequestSchema), [users.addLabour]);
 router.post('/demo', authenticate, [users.addLabour]);
 
 router.get('/:id', authenticate, [users.fetchByID]);

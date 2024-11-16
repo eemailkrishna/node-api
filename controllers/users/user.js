@@ -1,12 +1,14 @@
-const User = require('../models/user');
-const validation = require('../helpers/validations');
+const User = require('../../models/user');
+const validation = require('../../helpers/helper');
 const multer = require('multer');
 const path = require('path');
 const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
-const { secret } = require('../config/config');
+const { secret } = require('../../config/config');
+const {ResponseSchema} = require('./schema');
+
 
 app.use(session({
   secret: 'my-secret-key',
@@ -39,9 +41,12 @@ app.use(session({
  const getAll = async (req, res, next) => {
   const AuthId = session.AuthId;          
   try {
-    const users = await User.findAll(AuthId);    
+    const users = await User.findAll(AuthId);
+    const resResponse= users.map(ResponseSchema)
+
+
     if(users!=null){
-      res.json({'status':true,'status_code':200,'msg':'Record fetch successfully','data':users});
+      res.json({'status':true,'status_code':200,'msg':'Record fetch successfully','data':resResponse});
     }
     else{
   res.send({'Message':'Record not found'});
