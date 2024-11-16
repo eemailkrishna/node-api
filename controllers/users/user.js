@@ -41,7 +41,8 @@ app.use(session({
  const getAll = async (req, res, next) => {
   const AuthId = session.AuthId;          
   try {
-    const users = await User.findAll(AuthId);
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+    const users = await User.findAll(order);
     const resResponse= users.map(ResponseSchema)
 
 

@@ -39,6 +39,10 @@ app.use('/api/users', require('./routes/user'));
 app.use('/api/transport', require('./routes/transport'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/material-purchase', require('./routes/purchase'));
+app.use('/api/customer', require('./routes/customer'));
+app.use('/api/land-management', require('./routes/landManagement'));
+
+
 
 
 

@@ -6,8 +6,8 @@ const post = async(body)=>{
         return { id: rows.insertId, ...body };  
 }
 
-const fetch = async () => {   
-    const [rows] = await db.query('SELECT * FROM transports');
+const fetch = async (order) => {   
+    const [rows] = await db.query(`SELECT * FROM transports ORDER BY transport_id ${order}`);
 
     return rows;
 };

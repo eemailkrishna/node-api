@@ -42,7 +42,8 @@ const ResponseSchema = (res) => {
       workDate: res.work_date,
       paymentAmount: res.payment_amount,
       paymentStatus: res.status,
-      createdAt: moment(res.created_at).format('YYYY-MM-DD :HH:mm:ss')
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
+
 
     };
   };

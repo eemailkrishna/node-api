@@ -11,8 +11,8 @@ app.use(session({
 
 
 
-const findAll = async () => {   
-    const [rows] = await db.query('SELECT * FROM labours');
+const findAll = async (order) => {   
+    const [rows] = await db.query(`SELECT * FROM labours ORDER BY labour_id ${order}`);
 
     return rows;
 };

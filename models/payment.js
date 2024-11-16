@@ -6,11 +6,11 @@ const post = async(body)=>{
         return { id: rows.insertId, ...body };  
 }
 
-const fetch = async () => {
+const fetch = async (order) => {
     const [rows] = await db.query(`
         SELECT payments.*, labours.*
         FROM payments
-        INNER JOIN labours ON payments.labour_id = labours.labour_id
+        INNER JOIN labours ON payments.labour_id = labours.labour_id ORDER BY id ${order}
     `);
     return rows;
 };

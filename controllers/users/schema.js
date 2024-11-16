@@ -26,10 +26,10 @@ const ResponseSchema = (res) => {
     return {
       labour_id:res.labour_id,
       name: res.name,
-      mobile: res.phone,
+      mobile: res.mobile,
       address: res.address,
       type:res.type,
-      createdAt: moment(res.created_at).format('YYYY-MM-DD :HH:mm:ss')
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 
     };
   };

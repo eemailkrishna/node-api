@@ -25,7 +25,8 @@ const post = async(req,res,next)=>{
 
 const fetch = async(req,res,next)=>{
    try {
-      const data = await Payment.fetch();
+      const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+      const data = await Payment.fetch(order);
       const transformedData = data.map(ResponseSchema);
       res.status(200).json(
          {

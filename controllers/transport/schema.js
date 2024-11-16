@@ -41,7 +41,7 @@ const ResponseSchema = (transport) => {
       transportDetail:transport.transport_detail,
       paymentAmount:transport.payment_amount,
       pendingAmount:transport.pending_amount,
-      createdAt: moment(transport.created_at).format('YYYY-MM-DD :HH:mm:ss')
+      createdAt: moment(transport.created_at).format('YYYY-MM-DD h:mm:ss A')
 
     };
   };

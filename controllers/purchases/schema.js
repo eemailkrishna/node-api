@@ -41,13 +41,13 @@ const ResponseSchema = (res) => {
       }
 
     return {
-      materialId:res.material_id,
+      materialId:res.purchase_id,
       materialName:res.material_name,
       supplierName:res.supplier_name,
       quantity:res.quantity,
       purchaseCost:res.purchase_cost, 
       totalCost:res.total_cost,
-      createdAt: moment(res.created_at).format('YYYY-MM-DD :HH:mm:ss')
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 
     };
   };

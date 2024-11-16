@@ -1,13 +1,12 @@
 
 
-const Payment = require('../../models/payment')
+const Customer = require('../../models/land-manage')
 const {ResponseSchema} = require('./schema');
 
 
 const post = async(req,res,next)=>{
     try {
-        
-        const reqData = await Payment.post(req.body);  
+        const reqData = await Customer.post(req.body);  
         res.status(200).json(
            {
            success: true,
@@ -15,9 +14,7 @@ const post = async(req,res,next)=>{
            message: "Created successfully",
            data: reqData,
            }
-        )
-      
-        
+        )      
     } catch (error) {
         console.log(error)
     }
@@ -25,9 +22,10 @@ const post = async(req,res,next)=>{
 
 
 const fetch = async(req,res,next)=>{
+  
    try {
       const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
-      const data = await Payment.fetch(order);
+      const data = await Customer.fetch(order);
       const transformedData = data.map(ResponseSchema);
       res.status(200).json(
          {
