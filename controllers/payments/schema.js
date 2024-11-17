@@ -49,4 +49,46 @@ const ResponseSchema = (res) => {
   };
 
 
-module.exports = {RequestSchema,ResponseSchema};
+  const ResponseSchemaAdditional = (res) => {
+    if (!res || !res.created_at) {
+        throw new Error('Invalid  data or missing created_at');
+      }
+    return {
+      cost_id:res.cost_id,
+      description:res.description,
+      costAmount:res.cost_amount,
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
+    };
+  };
+
+
+  const ResponseSchemaExpense = (res) => {
+    if (!res || !res.created_at) {
+        throw new Error('Invalid  data or missing created_at');
+      }
+    return {
+      id:res.id,
+      expenseName:res.expense_name,
+      amount:res.amount,
+      date:res.date,
+      note:res.note,
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
+    };
+  };
+
+
+  const ResponseSchemaDiesel = (res) => {
+    if (!res || !res.created_at) {
+        throw new Error('Invalid  data or missing created_at');
+      }
+    return {
+      id:res.id,
+      dieselQty:res.diesel_qty,
+      pricePerLtr:res.price_per_ltr,
+      addedBy:res.added_by,
+      expenseDate:res.expense_date,
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
+    };
+  };
+
+module.exports = {RequestSchema,ResponseSchema,ResponseSchemaAdditional,ResponseSchemaExpense,ResponseSchemaDiesel};
