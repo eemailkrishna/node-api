@@ -34,5 +34,28 @@ const ResponseSchema = (res) => {
     };
   };
 
+  const ProfileResponseSchema = (res) => {
+    if (!res || !res.created_at) {
+      throw new Error('Invalid data or missing created_at');
+    }
+    return {
+      labour_id: res.labour_id,
+      name: res.name,
+      mobile: res.mobile,
+      address: res.address,
+      type: res.type,
+      payment_amount: res.payment_amount || null,
+      status: res.status || null,
+      work_date: moment(res.work_date).format('YYYY-MM-DD'),
+      payment_date: res.payment_date || null, 
+      number_of_brick: res.number_of_brick || null,
+      advanced_amount: res.advanced_amount || null, 
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A'),
+      updatedAt: res.updated_at ? moment(res.updated_at).format('YYYY-MM-DD h:mm:ss A') : null,
+    };
+  };
+  
 
-module.exports = {RequestSchema,ResponseSchema};
+
+
+module.exports = {RequestSchema,ResponseSchema,ProfileResponseSchema};

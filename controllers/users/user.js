@@ -7,7 +7,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const { secret } = require('../../config/config');
-const {ResponseSchema} = require('./schema');
+const {ResponseSchema,ProfileResponseSchema} = require('./schema');
 
 
 app.use(session({
@@ -78,11 +78,15 @@ app.use(session({
 
     
     try {
-      const users = await User.fetchByID(req.params.id);
+      const { id } = req.params;
+      const { fromDate, toDate } = req.query;
+      const users = await User.fetchByID(id, fromDate, toDate);
+
+      const responseData=users.map(ProfileResponseSchema)
      if(users=='0'){
       res.status(400).json({"messages":'Record not found','status':400});
      }
-      res.status(200).json({"messages":'Record found','status':200,users});
+      res.status(200).json({"messages":'Record found','status':200,responseData});
     } catch (err) {
       next(err);
     }

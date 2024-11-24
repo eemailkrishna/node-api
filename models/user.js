@@ -59,16 +59,37 @@ const deleteUser = async (id)=> {
         }
   }
 
-  const fetchByID = async (id)=> {
-    
-    const [rows1]= await db.query('SELECT * FROM users WHERE id = ?', [id]);     
-        if(rows1.length > 0){
-            return rows1;           
-        }
-        else{
-            return '0';
-        }
-  }
+  const fetchByID = async (id, fromDate, toDate) => {
+    try {
+      let query = `
+        SELECT payments.*, labours.*
+        FROM payments
+        INNER JOIN labours ON payments.labour_id = labours.labour_id
+        WHERE labours.labour_id = ?
+      `;
+  
+      const params = [id];
+      if (fromDate && toDate) {
+        query += ` AND payments.work_date BETWEEN ? AND ?`;
+        params.push(fromDate, toDate);
+      } else if (fromDate) {
+        query += ` AND payments.work_date <= ?`;
+        params.push(fromDate);
+      } else if (toDate) {
+        query += ` AND payments.work_date >= ?`;
+        params.push(toDate);
+      }
+     
+  
+      const [rows] = await db.query(query, params);
+      return rows;
+    } catch (error) {
+      console.error('Error fetching data by ID:', error);
+      throw error;
+    }
+  };
+  
+
 
     const UpdateByID = async(id,data)=>{
         const { name, email, password } = data;

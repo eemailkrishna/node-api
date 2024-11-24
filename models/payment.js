@@ -2,7 +2,8 @@ const db = require('../config/database');
 
 
 const post = async(body)=>{
-    const [rows] = await db.query('INSERT INTO payments (labour_id,work_date,payment_amount,status) VALUES (?,?,?,?)', [body.labourId,body.workDate,body.paymentAmount,body.status]);
+   
+    const [rows] = await db.query('INSERT INTO payments (labour_id,work_date,payment_amount,status,advanced_amount,number_of_brick,payment_date) VALUES (?,?,?,?,?,?,?)', [body.labourId,body.workDate,body.paymentAmount,body.status,body.advancedAmount,body.numberOfBrick,body.paymentDate]);
         return { id: rows.insertId, ...body };  
 }
 

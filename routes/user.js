@@ -11,7 +11,7 @@ router.get('/', authenticate, [users.getAll]);
 router.post('/', authenticate,validateRequest(RequestSchema), [users.addLabour]);
 router.post('/demo', authenticate, [users.addLabour]);
 
-router.get('/:id', authenticate, [users.fetchByID]);
+router.get('/view-profile/:id', authenticate, [users.fetchByID]);
 router.put('/:id', authenticate, [users.UpdateByID]);
 
 router.delete('/:id', authenticate, [users.deleteUser]);

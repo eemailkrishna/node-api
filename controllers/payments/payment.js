@@ -15,8 +15,7 @@ const post = async(req,res,next)=>{
            data: reqData,
            }
         )
-      
-        
+     
     } catch (error) {
         console.log(error)
     }
