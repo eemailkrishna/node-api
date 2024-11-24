@@ -63,5 +63,17 @@ const fetch = async (req, res, next) => {
 };
 
 
+const UpdateByID = async (req, res, next) => { 
+    try {
+      const users = await Customer.UpdateByID(req.params.id, req.body);
+     if(users=='0'){
+      res.status(400).json({"messages":'Record not found','status':400});
+     }
+      res.status(200).json({"messages":'Record Updated','status':200,...users});
+    } catch (err) {
+      next(err);
+    }
+  };
 
-module.exports = {post,fetch}
+
+module.exports = {post,fetch,UpdateByID}

@@ -7,5 +7,8 @@ const {RequestSchema} = require('../controllers/purchases/schema');
 const router = express.Router();
 router.get('/', authenticate, [purchase.fetch]);
 router.post('/', authenticate,validateRequest(RequestSchema),purchase.post);
+router.put('/:id', authenticate, [purchase.UpdateByID]);
+
+
 
 module.exports = router;

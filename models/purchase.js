@@ -11,4 +11,17 @@ const fetch = async (order) => {
     return rows;
 };
 
-module.exports = {post,fetch}
+
+const UpdateByID = async(id,data)=>{
+    const [rows1]= await db.query('SELECT * FROM material_purchases WHERE purchase_id = ?', [id]);
+    if(rows1.length > 0){
+        const [data1] = await db.query('UPDATE material_purchases SET material_name = ?,supplier_name = ?,purchase_cost = ?,total_cost = ?, quantity = ?, pending_amount = ? WHERE purchase_id = ?', [data.materialName, data.supplierName,data.purchaseCost,data.totalCost,data.quantity,(data.totalCost-data.purchaseCost),id]);
+        return {data};         
+    }
+    else{
+        return '0';
+    }
+   
+}
+
+module.exports = {post,fetch,UpdateByID}

@@ -45,7 +45,8 @@ const ResponseSchema = (res) => {
       materialName:res.material_name,
       supplierName:res.supplier_name,
       quantity:res.quantity,
-      purchaseCost:res.purchase_cost, 
+      purchaseCost:res.purchase_cost,
+      pendingAmount:res.pending_amount,
       totalCost:res.total_cost,
       createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 

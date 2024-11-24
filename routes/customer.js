@@ -7,5 +7,7 @@ const {RequestSchema} = require('../controllers/customers/schema');
 const router = express.Router();
 router.get('/', authenticate, [customer.fetch]);
 router.post('/', authenticate,validateRequest(RequestSchema),customer.post);
+router.put('/:id', authenticate, [customer.UpdateByID]);
+
 
 module.exports = router;

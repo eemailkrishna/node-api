@@ -23,6 +23,8 @@ const RequestSchema = Joi.object({
     }),
     
     totalPaidAmount: Joi.number().optional(),
+    advanceAmount: Joi.number().optional(),
+
     totalTrolly: Joi.number().positive().required().messages({
         'number.base': 'Total brick amount must be a number',
         'number.positive': 'Total brick amount must be a positive value',
@@ -49,6 +51,7 @@ const ResponseSchema = (res) => {
       totalPaidAmount:res.total_paid_amount,
       pendingAmount: res.pending_amount,
       totalTrolly: res.total_trolly,
+      advanceAmount:res.advance_amount,
       totalBrick: res.total_brick,
       createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 
