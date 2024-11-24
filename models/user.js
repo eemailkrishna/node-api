@@ -119,7 +119,134 @@ const deleteUser = async (id)=> {
     // }
 // }
 
+const Summary = async (startDate, endDate) => {
+    // Get current month's start and end date if no dates provided
+    const today = new Date();
+    const defaultStartDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    const defaultEndDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    // Format dates to YYYY-MM-DD
+    const formatDate = (date) => date.toISOString().split('T')[0];
+    
+    // Use provided dates or defaults
+    const start = startDate || formatDate(defaultStartDate);
+    const end = endDate || formatDate(defaultEndDate);
+
+    // Add date range to each query
+    const [rows] = await db.query(`
+        SELECT COUNT(*) AS total_labours 
+        FROM labours 
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [transport] = await db.query(`
+        SELECT 
+            SUM(payment_amount) AS total_paid_amount, 
+            SUM(pending_amount) AS total_pending_amount,
+            (SUM(payment_amount) + SUM(pending_amount)) AS total_amount
+        FROM transports
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [customer] = await db.query(`
+        SELECT COUNT(*) AS total_customer 
+        FROM customers
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [customers] = await db.query(`
+        SELECT 
+            SUM(total_paid_amount) AS total_paid_amount, 
+            SUM(pending_amount) AS total_pending_amount,
+            (SUM(total_paid_amount) + SUM(pending_amount)) AS total_amount
+        FROM customers
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [expesense] = await db.query(`
+        SELECT 
+            SUM(diesel_qty * price_per_ltr) AS total_expense
+        FROM diesel_expenses
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [additional_expense] = await db.query(`
+        SELECT 
+            SUM(amount) AS total_expense
+        FROM additional_expenses
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [material] = await db.query(`
+        SELECT 
+            SUM(total_cost) AS total_paid_amount, 
+            SUM(pending_amount) AS total_pending_amount,
+            (SUM(total_cost) + SUM(pending_amount)) AS total_amount
+        FROM material_purchases
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const [land] = await db.query(`
+        SELECT 
+            SUM(paid_amount) AS total_paid_amount, 
+            SUM(pending_amount) AS total_pending_amount,
+            (SUM(paid_amount) + SUM(pending_amount)) AS total_amount
+        FROM land_managements
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const totalLabour = rows[0]?.total_labours || 0;
+
+    const [paymentRows] = await db.query(`
+        SELECT 
+            SUM(CASE WHEN status = 'success' THEN payment_amount ELSE 0 END) AS paid_amount,
+            SUM(CASE WHEN status = 'pending' THEN payment_amount ELSE 0 END) AS pending_amount,
+            SUM(CASE WHEN status IN ('pending', 'success') THEN payment_amount ELSE 0 END) AS total_amount
+        FROM payments
+        WHERE DATE(created_at) BETWEEN ? AND ?`, 
+        [start, end]
+    );
+
+    const paymentData = paymentRows[0] || { paid_amount: 0, pending_amount: 0, total_amount: 0 };
+
+    return {
+        labour: {
+            total_amount: paymentData.total_amount || 0,
+            paid_amount: paymentData.paid_amount || 0,
+            pending_amount: paymentData.pending_amount || 0,
+            total_labour: totalLabour
+        },
+        transport: {
+            ...transport[0]
+        },
+        landing: {
+            ...land[0]
+        },
+        costomer: {
+            ...customer[0],
+            ...customers[0]
+        },
+        material: {
+            ...material[0]
+        },
+        expesense: {
+            ...expesense[0]
+        },
+        addtionalExpense: {
+            ...additional_expense[0]
+        }
+    };
+};
+
 
   
 
-module.exports = {labour,findAll ,findByEmail,create,deleteUser ,fetchByID ,UpdateByID,InsertAddress}
+module.exports = {labour,findAll ,findByEmail,create,deleteUser ,fetchByID ,UpdateByID,InsertAddress,Summary}

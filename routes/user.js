@@ -14,8 +14,12 @@ router.post('/demo', authenticate, [users.addLabour]);
 router.get('/view-profile/:id', authenticate, [users.fetchByID]);
 router.put('/:id', authenticate, [users.UpdateByID]);
 
+router.get('/all-summary', authenticate, [users.Summary]);
+
+
 router.delete('/:id', authenticate, [users.deleteUser]);
 // router.post('/upload', authenticate, [users.upload1]);
+
 
 router.post('/insert/address', [users.InsertAddress]);
 

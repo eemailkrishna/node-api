@@ -162,6 +162,33 @@ app.use(session({
     //   });
     // }
   // };
+
+
+  const Summary = async (req, res, next) => {
+    const AuthId = session.AuthId;          
+    try {
+      const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+
+      const summaryData ={
+        startDate: req.query.startDate,
+        endDate: req.query.endDate
+      }
+    
+      const users = await User.Summary(req.query.startDate,req.query.endDate);
+      // const resResponse= users.map(ResponseSchema)
+
+      if(users!=null){
+        res.status(200).json({'status':true,'status_code':200,'msg':'Record fetch successfully','data':users});
+      }
+      else{
+    res.send({'Message':'Record not found'});
+      }
+    } catch (err) {
+  
+  
+      next(err);
+    }
+  };
   
 
-  module.exports = { addLabour,UpdateByID,getAll ,deleteUser ,fetchByID , InsertAddress}
+  module.exports = { addLabour,UpdateByID,getAll ,deleteUser ,fetchByID , InsertAddress,Summary}
