@@ -7,5 +7,7 @@ const {RequestSchema} = require('../controllers/land-managements/schema');
 const router = express.Router();
 router.get('/', authenticate, [land_manage.fetch]);
 router.post('/', authenticate,validateRequest(RequestSchema),land_manage.post);
+router.put('/:id', authenticate, [land_manage.UpdateByID]);
+
 
 module.exports = router;
