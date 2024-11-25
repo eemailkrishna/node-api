@@ -61,33 +61,49 @@ const deleteUser = async (id)=> {
 
   const fetchByID = async (id, fromDate, toDate) => {
     try {
-      let query = `
-        SELECT payments.*, labours.*
-        FROM payments
-        INNER JOIN labours ON payments.labour_id = labours.labour_id
-        WHERE labours.labour_id = ?
-      `;
-  
-      const params = [id];
-      if (fromDate && toDate) {
-        query += ` AND payments.work_date BETWEEN ? AND ?`;
-        params.push(fromDate, toDate);
-      } else if (fromDate) {
-        query += ` AND payments.work_date <= ?`;
-        params.push(fromDate);
-      } else if (toDate) {
-        query += ` AND payments.work_date >= ?`;
-        params.push(toDate);
-      }
-     
-  
-      const [rows] = await db.query(query, params);
-      return rows;
+        let query = `
+            SELECT 
+                l.labour_id,
+                l.name,l.mobile,
+                l.name,l.mobile,l.name,l.type,
+                COALESCE(SUM(CASE WHEN p.status = 'success' THEN p.payment_amount ELSE 0 END), 0) as total_paid_amount,
+                COALESCE(SUM(CASE WHEN p.status = 'pending' THEN p.payment_amount ELSE 0 END), 0) as total_pending_amount,
+                COALESCE(SUM(p.advanced_amount), 0) as total_advanced_amount,
+                COALESCE(COUNT(DISTINCT p.id), 0) as total_payments,
+                COALESCE(SUM(p.payment_amount), 0) as total_amount
+            FROM 
+                labours l
+            LEFT JOIN 
+                payments p ON l.labour_id = p.labour_id
+            WHERE 
+                l.labour_id = ?
+        `;
+
+        const params = [id];
+        query += ` GROUP BY l.labour_id, l.name`;
+
+        const [rows] = await db.query(query, params);
+        return rows
+        
+        // If no rows found, return default structure with zeros
+        if (rows.length === 0) {
+            return [{
+                labour_id: id,
+                name: null,
+                total_paid_amount: 0,
+                total_pending_amount: 0,
+                total_advanced_amount: 0,
+                total_payments: 0,
+                total_amount: 0
+            }];
+        }
+
+        return rows;
     } catch (error) {
-      console.error('Error fetching data by ID:', error);
-      throw error;
+        console.error('Error fetching payment summary by ID:', error);
+        throw error;
     }
-  };
+};
   
 
 

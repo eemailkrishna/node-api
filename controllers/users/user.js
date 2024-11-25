@@ -81,7 +81,7 @@ app.use(session({
       const { id } = req.params;
       const { fromDate, toDate } = req.query;
       const users = await User.fetchByID(id, fromDate, toDate);
-
+ res.json(users)
       const responseData=users.map(ProfileResponseSchema)
      if(users=='0'){
       res.status(400).json({"messages":'Record not found','status':400});

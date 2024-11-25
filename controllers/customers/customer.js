@@ -30,14 +30,6 @@ const post = async(req,res,next)=>{
 
 const fetch = async (req, res, next) => {
     try {
-        if (cache.data) {
-            return res.status(200).json({
-                success: true,
-                status: 200,
-                message: "Record fetched successfully",
-                data: cache.data,
-            });
-        }
         const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
         const data = await Customer.fetch(order);
         if (!data || data.length === 0) {
@@ -47,9 +39,7 @@ const fetch = async (req, res, next) => {
                 message: "No records found",
             });
         }
-
         const transformedData = data.map(ResponseSchema);
-        cache.data = transformedData;
         res.status(200).json({
             success: true,
             status: 200,

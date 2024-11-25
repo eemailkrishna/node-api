@@ -15,7 +15,7 @@ const fetch = async (order) => {
 const UpdateByID = async(id,data)=>{
     const [rows1]= await db.query('SELECT * FROM land_managements WHERE id = ?', [id]);
     if(rows1.length > 0){
-        const [data1] = await db.query('UPDATE land_managements SET owner_name = ?, mobile = ?,land_area = ?,total_price = ?,paid_amount = ?, address = ?,pending_amount = ? WHERE id = ?', [data.ownerName, data.mobile,data.landArea,data.totalPrice,data.paidAmount,data.address,(data.totalPrice-data.paidAmount),id]);
+        const [data1] = await db.query('UPDATE land_managements SET owner_name = ?, mobile = ?,land_area = ?,total_price = ?,paid_amount = ?, address = ?,pending_amount = ? WHERE id = ?', [data.ownerName, data.mobile,data.landArea,data.totalPrice,data.paidAmount+data.pay_pending_amount,data.address,(data.totalPrice-data.paidAmount-data.pay_pending_amount),id]);
         return {data};         
     }
     else{
