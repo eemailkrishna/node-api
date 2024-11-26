@@ -61,16 +61,19 @@ const deleteUser = async (id)=> {
 
   const fetchByID = async (id, fromDate, toDate) => {
     try {
+        // Build the base query
         let query = `
             SELECT 
                 l.labour_id,
-                l.name,l.mobile,
-                l.name,l.mobile,l.name,l.type,
+                l.name,
+                l.mobile,
+                l.type,
                 COALESCE(SUM(CASE WHEN p.status = 'success' THEN p.payment_amount ELSE 0 END), 0) as total_paid_amount,
                 COALESCE(SUM(CASE WHEN p.status = 'pending' THEN p.payment_amount ELSE 0 END), 0) as total_pending_amount,
                 COALESCE(SUM(p.advanced_amount), 0) as total_advanced_amount,
                 COALESCE(COUNT(DISTINCT p.id), 0) as total_payments,
-                COALESCE(SUM(p.payment_amount), 0) as total_amount
+                COALESCE(SUM(p.payment_amount), 0) as total_amount,
+                COALESCE(SUM(p.number_of_brick), 0) as total_bricks
             FROM 
                 labours l
             LEFT JOIN 
@@ -80,21 +83,32 @@ const deleteUser = async (id)=> {
         `;
 
         const params = [id];
-        query += ` GROUP BY l.labour_id, l.name`;
 
+        // Add date range filter if provided
+        if (fromDate && toDate) {
+            query += ` AND p.work_date BETWEEN ? AND ?`;
+            params.push(fromDate, toDate);
+        }
+
+        // Group by labour_id to summarize results
+        query += ` GROUP BY l.labour_id, l.name, l.mobile, l.type`;
+
+        // Execute the query with the parameters
         const [rows] = await db.query(query, params);
-        return rows
-        
-        // If no rows found, return default structure with zeros
+
+        // Return the results or a default structure if no data is found
         if (rows.length === 0) {
             return [{
                 labour_id: id,
                 name: null,
+                mobile: null,
+                type: null,
                 total_paid_amount: 0,
                 total_pending_amount: 0,
                 total_advanced_amount: 0,
                 total_payments: 0,
-                total_amount: 0
+                total_amount: 0,
+                total_bricks: 0
             }];
         }
 
@@ -104,7 +118,7 @@ const deleteUser = async (id)=> {
         throw error;
     }
 };
-  
+
 
 
     const UpdateByID = async(id,data)=>{

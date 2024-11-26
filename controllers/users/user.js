@@ -81,12 +81,11 @@ app.use(session({
       const { id } = req.params;
       const { fromDate, toDate } = req.query;
       const users = await User.fetchByID(id, fromDate, toDate);
- res.json(users)
-      const responseData=users.map(ProfileResponseSchema)
+      // const responseData=users.map(ProfileResponseSchema)
      if(users=='0'){
       res.status(400).json({"messages":'Record not found','status':400});
      }
-      res.status(200).json({"messages":'Record found','status':200,responseData});
+      res.status(200).json({"messages":'Record found','status':200,users});
     } catch (err) {
       next(err);
     }
@@ -124,7 +123,6 @@ app.use(session({
       const { address_name } = req.body; 
       const user = await User.InsertAddress(address_name,AuthId);    
       if(user==0){
-        
       res.status(400).json({ 'message':'Email Already Exists','status':400});
       }       
     

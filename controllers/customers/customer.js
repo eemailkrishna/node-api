@@ -52,7 +52,6 @@ const fetch = async (req, res, next) => {
     }
 };
 
-
 const UpdateByID = async (req, res, next) => { 
     try {
       const users = await Customer.UpdateByID(req.params.id, req.body);
