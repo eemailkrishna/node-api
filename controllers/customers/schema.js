@@ -50,7 +50,9 @@ const ResponseSchema = (res) => {
       totalBrickAmount:res.total_brick_amount, 
       totalPaidAmount:res.total_paid_amount,
       pendingAmount: res.pending_amount,
+      totalOrderTrolly: res.total_order_trolly,
       totalTrolly: res.total_trolly,
+      totalPendingTrolly: res.pending_trolly,
       advanceAmount:res.advance_amount,
       totalBrick: res.total_brick,
       createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
