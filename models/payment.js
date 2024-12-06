@@ -2,8 +2,10 @@ const db = require('../config/database');
 
 
 const post = async(body)=>{
+
+    let calculate_amount = (body.rate/1000)*body.numberOfBrick
    
-    const [rows] = await db.query('INSERT INTO payments (labour_id,work_date,payment_amount,status,advanced_amount,number_of_brick,payment_date) VALUES (?,?,?,?,?,?,?)', [body.labourId,body.workDate,body.paymentAmount,body.status,body.advancedAmount,body.numberOfBrick,body.paymentDate]);
+    const [rows] = await db.query('INSERT INTO payments (labour_id,work_date,payment_amount,status,advanced_amount,number_of_brick,payment_date,rate) VALUES (?,?,?,?,?,?,?,?)', [body.labourId,body.workDate,calculate_amount,body.status,body.advancedAmount,body.numberOfBrick,body.paymentDate,body.rate]);
         return { id: rows.insertId, ...body };  
 }
 

@@ -52,6 +52,27 @@ const fetch = async (req, res, next) => {
     }
 };
 
+const fetchByMobile = async (req, res, next) => {
+    try {
+        const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+        const mobile = req.params.mobile;
+        if (!mobile) {
+            return res.status(400).json({ error: 'Mobile number is required' });
+        }
+        const data = await Customer.fetchDataById(mobile,order);
+
+        if (data.length === 0) {
+            return res.status(404).json({ error: 'No records found for the provided mobile number' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
 const UpdateByID = async (req, res, next) => { 
     try {
       const users = await Customer.UpdateByID(req.params.id, req.body);
@@ -65,4 +86,4 @@ const UpdateByID = async (req, res, next) => {
   };
 
 
-module.exports = {post,fetch,UpdateByID}
+module.exports = {post,fetch,UpdateByID,fetchByMobile}

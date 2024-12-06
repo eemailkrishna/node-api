@@ -43,10 +43,12 @@ const ResponseSchema = (res) => {
       type:res.type, 
       address:res.address,
       workDate: res.work_date,
+      rate: res.rate,
+      numberOfBrick: res.number_of_brick,
       paymentAmount: res.payment_amount,
       advancedAmount: res.advanced_amount,
       paymentDate: res.payment_date,
-      numberOfBrick: res.number_of_brick,
+      
       paymentStatus: res.status,
       createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 

@@ -6,8 +6,39 @@ const post = async(body)=>{
 }
 
 const fetch = async (order) => {   
-    const [rows] = await db.query(`SELECT * FROM customers ORDER BY id ${order}`);
+    const [rows] = await db.query(`SELECT * FROM customers  GROUP BY mobile  ORDER BY id ${order}`);
     return rows;
+};
+
+const fetchDataById = async (id, sortOrder = 'ASC') => {
+    if (sortOrder !== 'ASC' && sortOrder !== 'DESC') {
+        throw new Error('Invalid sort order. It must be "ASC" or "DESC".');
+    }
+
+    try {
+        const [rows1] = await db.query(
+            `SELECT * FROM customers WHERE mobile = ? ORDER BY id ${sortOrder}`,
+            [id]
+        );
+        const totalPendingAmount = rows1.reduce((sum, row) => sum + parseFloat(row.pending_amount), 0);
+        const totalAdvancedAmount = rows1.reduce((sum, row) => sum + parseFloat(row.advance_amount), 0);
+        const payableAmount = totalPendingAmount ??0 - totalAdvancedAmount??0;
+        
+        const alloverView = {
+            TotalPendingAmount: totalPendingAmount,
+            TotalAdvancedAmount: totalAdvancedAmount,
+            PayableAmount: payableAmount
+
+        };
+        return {
+            data: rows1,
+            alloverView
+        };
+
+    } catch (error) {
+        console.error('Database query error:', error);
+        throw new Error('Unable to fetch data.');
+    }
 };
 
 
@@ -22,4 +53,4 @@ const UpdateByID = async(id,body)=>{
     }
    
 }
-module.exports = {post,fetch,UpdateByID}
+module.exports = {post,fetch,UpdateByID,fetchDataById}
