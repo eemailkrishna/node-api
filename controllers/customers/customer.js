@@ -64,7 +64,7 @@ const fetchByMobile = async (req, res, next) => {
         if (data.length === 0) {
             return res.status(404).json({ error: 'No records found for the provided mobile number' });
         }
-        res.json(data);
+        res.status(200).json({ "status":true,'status_code':200, ...data });
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Internal Server Error' });

@@ -1,7 +1,9 @@
 const db = require('../config/database');
 
 const post = async(body)=>{
-    const [rows] = await db.query('INSERT INTO customers (customer_name,address,mobile,total_brick_amount,total_paid_amount,pending_amount,advance_amount,total_trolly,total_brick,total_order_trolly,pending_trolly) VALUES (? ,? ,?,?,?,?,?,?,?,?,?)', [body.customerName,body.address,body.mobile,body.totalBrickAmount,body.totalPaidAmount,(body.totalBrickAmount - body.totalPaidAmount),body.advanceAmount,body.totalTrolly,body.totalBrick,body.total_order_trolly,body.total_order_trolly-body.totalTrolly]);
+    const total_amount = ((body.rate/2000)*body.totalBrick)-body.discount*body.totalTrolly
+
+    const [rows] = await db.query('INSERT INTO customers (customer_name,address,mobile,total_brick_amount,total_paid_amount,pending_amount,advance_amount,total_trolly,total_brick,total_order_trolly,pending_trolly,discount,customer_type,rate) VALUES (? ,? ,?,?,?,?,?,?,?,?,?,?,?,?)', [body.customerName,body.address,body.mobile,body.totalBrickAmount,total_amount,(total_amount - body.totalPaidAmount),body.advanceAmount,body.totalTrolly,body.totalBrick,body.total_order_trolly,body.total_order_trolly-body.totalTrolly,body.discount,body.customer_type,body.rate]);
         return { id: rows.insertId, ...body };  
 }
 
