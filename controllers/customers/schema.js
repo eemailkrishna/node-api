@@ -49,12 +49,37 @@ const ResponseSchema = (res) => {
       mobile:res.mobile,
       totalBrickAmount:res.total_brick_amount, 
       totalPaidAmount:res.total_paid_amount,
-      pendingAmount: res.pending_amount,
+      pendingAmount: -(res.pending_amount <0 ? res.pending_amount :0),
       totalOrderTrolly: res.total_order_trolly,
       totalTrolly: res.total_trolly,
       totalPendingTrolly: res.pending_trolly,
-      advanceAmount:res.advance_amount,
+      advanceAmount:res.pending_amount >0 ? res.pending_amount :0,
       totalBrick: res.total_brick,
+      totalBrickOrder: res.total_brick_order,
+      createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
+
+    };
+  };
+
+
+  const ResponseSchema1 = (res) => {
+    if (!res || !res.created_at) {
+        throw new Error('Invalid  data or missing created_at');
+      }
+    return {
+      customer_id:res.id,
+      customerName:res.customer_name,
+      address:res.address,
+      mobile:res.mobile,
+      totalBrickAmount:res.total_brick_amount, 
+      totalPaidAmount:res.total_paid_amount,
+      pendingAmount: -(res.pending_amount <0 ? res.pending_amount :0),
+      totalOrderTrolly: res.total_order_trolly,
+      totalTrolly: res.total_trolly,
+      totalPendingTrolly: res.pending_trolly,
+      advanceAmount:res.pending_amount >0 ? res.pending_amount :0,
+      totalBrick: res.total_brick,
+      totalBrickOrder: res.total_brick_order,
       createdAt: moment(res.created_at).format('YYYY-MM-DD h:mm:ss A')
 
     };

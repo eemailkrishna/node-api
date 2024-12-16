@@ -61,14 +61,14 @@ const deleteUser = async (id)=> {
 
   const fetchByID = async (id, fromDate, toDate) => {
     try {
-        // Build the base query
         let query = `
-            SELECT 
-                l.labour_id,
-                l.name,
-                l.mobile,
-                l.type,
-                COALESCE(SUM(CASE WHEN p.status = 'success' THEN p.payment_amount ELSE 0 END), 0) as total_paid_amount,
+            SELECT l.labour_id,l.name,l.mobile,l.type,COALESCE(SUM(CASE 
+            WHEN p.status IN ('success', 'deduct_from_advance') THEN p.payment_amount 
+            ELSE 0 
+                        END
+                    ), 
+                    0
+                ) AS total_paid_amount,
                 COALESCE(SUM(CASE WHEN p.status = 'pending' THEN p.payment_amount ELSE 0 END), 0) as total_pending_amount,
                 COALESCE(SUM(p.advanced_amount), 0) as total_advanced_amount,
                 COALESCE(COUNT(DISTINCT p.id), 0) as total_payments,
@@ -89,14 +89,8 @@ const deleteUser = async (id)=> {
             query += ` AND p.work_date BETWEEN ? AND ?`;
             params.push(fromDate, toDate);
         }
-
-        // Group by labour_id to summarize results
         query += ` GROUP BY l.labour_id, l.name, l.mobile, l.type`;
-
-        // Execute the query with the parameters
         const [rows] = await db.query(query, params);
-
-        // Return the results or a default structure if no data is found
         if (rows.length === 0) {
             return [{
                 labour_id: id,
@@ -118,8 +112,6 @@ const deleteUser = async (id)=> {
         throw error;
     }
 };
-
-
 
     const UpdateByID = async(id,data)=>{
         const { name, email, password } = data;

@@ -60,10 +60,13 @@ const fetchByMobile = async (req, res, next) => {
             return res.status(400).json({ error: 'Mobile number is required' });
         }
         const data = await Customer.fetchDataById(mobile,order);
+    
+
 
         if (data.length === 0) {
             return res.status(404).json({ error: 'No records found for the provided mobile number' });
         }
+        
         res.status(200).json({ "status":true,'status_code':200, ...data });
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -76,9 +79,16 @@ const fetchByMobile = async (req, res, next) => {
 const UpdateByID = async (req, res, next) => { 
     try {
       const users = await Customer.UpdateByID(req.params.id, req.body);
+
      if(users=='0'){
       res.status(400).json({"messages":'Record not found','status':400});
      }
+     if(users=='3'){
+        res.status(400).json({"messages":'Send pending amount is greater than pending amount','status':400});
+    }
+    if(users=='4'){
+        res.status(400).json({"messages":'Send pending trolly is greater than pending trolly','status':400});
+    }
       res.status(200).json({"messages":'Record Updated','status':200,...users});
     } catch (err) {
       next(err);
